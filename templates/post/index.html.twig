@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CMI Test{% endblock %}
+
+{% block body %}
+    {# Count comment for post #}
+    {% set total = post.comments|length %}
+
+    <div class="w-full px-2 py-16 sm:px-0">
+        <h2 class="text-center p-2 text-xlg font-bold">{{ post.title }}</h2>
+        <h3 class="text-lg mb-4">Les commentaires reçus <span class="text-[#ee5253]">({{total}})</span> :</h3>
+
+        <div class='flex justify-between flex-wrap'> 
+            {% if total %}           
+                {% for comment in post.comments %}
+                    <div
+                        class="relative m-1 w-full"
+                    >
+                        <div class="bg-gray-100">
+                            <p class="p-4">{{ comment.content }}</p>
+                        </div>
+                            <span class="text-sm">Publié le {{ comment.createdAt|date("m/d/Y") }}</span>
+                    </div>
+
+                    {% if comment.answers|length %}
+                        {% include 'comment/answers.html.twig' with {'comment': comment} %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p class="font-bold">0 commentaire</p>
+            {% endif %}
+        </div>            
+    </div>
+{% endblock %}

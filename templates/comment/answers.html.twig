@@ -1,0 +1,19 @@
+{# Count answers for comment #}
+{% set total = comment.answers|length %}
+
+<div class='flex justify-between flex-wrap m-6'>
+    <h3 class="mt-4 text-lg w-full mb-2">Réponses <span class="text-[#ee5253]">({{total}})</span> :</h3> 
+
+    {% if total %}                    
+        {% for answer in comment.answers %}
+            <div
+                class="relative w-full border-2"
+            >
+                <div class="">
+                    <p class="p-4">{{ answer.content }}</p>
+                </div>
+            </div>
+            <span class="text-sm text-[#0097e6] mb-1">Publié le {{ answer.createdAt|date("m/d/Y") }}</span>
+        {% endfor %}
+    {% endif %}
+</div>            
