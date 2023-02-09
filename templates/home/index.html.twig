@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CMI Test{% endblock %}
+
+{% block body %}
+     <div class="w-full px-2 py-16 sm:px-0">
+          <h3 class="text-center p-2 text-lg font-bold">Trouvez des articles intéressants</h3>
+
+          <section class='flex justify-between flex-wrap'>
+                {% for post in posts %}
+                  <article
+                    class="relative rounded-md p-3 m-2 w-full sm:w-60 bg-gray-100 hover:bg-[#140809] hover:text-white"
+                  >
+                    <a href="" class="">
+                      <div class="py-4">
+                          <h3 class="font-medium leading-5">
+                              {{post.title}}
+                          </h3>
+                          <p>{{post.content|u.truncate(20, '...')}}</p>
+                      </div>
+                    </a>
+                  </article>
+                {% endfor %}
+            </section>
+            
+            {% set currentPage = app.request.query.get('page') ?  app.request.query.get('page') : 1 %}
+
+            <div class="pagination w-full flex justify-center items-center mt-4">
+                    {% if currentPage > 1%}
+                      <a class="p-4" aria-disabled="true" href="{{ path('app_home', { 'page': currentPage - 1 }) }}" title="Précédent">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                          </svg>
+                      </a>
+                    {% endif %}
+
+                    {% if posts.pageCount > 1 %}
+                      {% for i in 1..posts.pageCount %}
+                          {% if i == currentPage %}
+                              <a class="p-2 rounded bg-[#2C3E50] text-white p-4" href="{{ path('app_home', { 'page': currentPage }) }}" title="Précédent">
+                                  <span class="font-bold">{{currentPage}}</span>
+                              </a>
+                          {% else %}
+                              <a class="p-2" href="{{ path('app_home', { 'page': i }) }}" title="Précédent">
+                                  <span class="">{{i}}</span>
+                              </a>
+                          {% endif %}
+                      {% endfor %}
+                      
+                      <a class="p-4" href="{{ path('app_home', { 'page': currentPage + 1 }) }}" title="Suivant">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                          </svg>
+                      </a>
+                    {% endif %}
+            </div>
+      </div>
+{% endblock %}
