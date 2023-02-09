@@ -7,11 +7,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\PostRepository;
+use App\Entity\Post;
+use App\Entity\Comment;
 
 #[Route('/', name: 'app_')]
 class NavigationController extends AbstractController
 {
-    #[Route('', name: 'home')]
+    /**
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param PostRepository $postRepository
+     */
+    #[Route('', name: 'home', methods: ['GET', 'HEAD'])]
     public function index(Request $request, PaginatorInterface $paginator, PostRepository $postRepository)
     {
         $posts = $paginator->paginate(
@@ -24,6 +31,17 @@ class NavigationController extends AbstractController
             'posts' => $posts
         ]);
 
+    }
+
+    /** 
+     * @param Post $post
+    */
+    #[Route('post/{id}', name: 'post', methods: ['GET', 'HEAD'])]
+    public function showPost(Post $post)
+    {
+        return $this->render('post/index.html.twig', [
+            'post' => $post
+        ]);
     }
 }
 
