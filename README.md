@@ -1,6 +1,6 @@
 # CMI test project
 
-Il s'afit dun projet de création d'un service web de discussion et de commentaires d’articles.
+Il s'agit dun projet de création d'un service web de discussion et de commentaires d’articles.
 
 ## Installation du projet
 
