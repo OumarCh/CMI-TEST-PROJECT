@@ -1,0 +1,12 @@
+        <section class='flex justify-between flex-wrap my-8'>
+            {% for comment in comments %}
+                <article
+                    class="relative rounded-md p-3 m-2 w-full sm:w-60 bg-[#34495e] text-white"
+                >
+                    <div class="py-4">
+                        <p>{{comment.content}}</p>
+                    </div>
+                    <span class="text-xs">Publié le {{ comment.createdAt|date("d/m/Y", "Europe/Paris")}}
+                </article>
+            {% endfor %}
+        </section>

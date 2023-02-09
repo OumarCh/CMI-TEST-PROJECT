@@ -4,7 +4,11 @@
 
 {% block body %}
     <div class="w-full px-2 py-16 sm:px-0">
-        <h1 id="title" class="text-center p-2 text-lg font-bold">Trouvez des articles intéressants</h1>
+        <h1 id="first_block_title" class="text-center p-2 text-lg font-bold">Les derniers commentaires</h1>
+
+        {% include 'home/last_comments.html.twig' with {'comments': last_comments} %}
+
+        <h2 id="second_block_title" class="text-center p-2 text-lg font-bold">Trouvez des articles intéressants</h2>
 
         <section class='flex justify-between flex-wrap'>
             {% for post in posts %}
@@ -16,6 +20,7 @@
                             <h2 class="font-medium leading-5">{{post.title}}</h2>
                             <p>{{post.content|u.truncate(20, '...')}}</p>
                         </div>
+                        <span class="text-xs">Créé le {{ post.createdAt|date("d/m/Y", "Europe/Paris")}}
                     </article>
                 </a>
             {% endfor %}

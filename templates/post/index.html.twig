@@ -19,7 +19,7 @@
                         <div class="bg-gray-100">
                             <p class="p-4">{{ comment.content }}</p>
                         </div>
-                            <span class="text-sm">Publié le {{ comment.createdAt|date("m/d/Y") }}</span>
+                            <span class="text-sm">Publié le {{ comment.createdAt|date("d/m/Y", "Europe/Paris") }}</span>
                     </div>
 
                     {% if comment.answers|length %}
