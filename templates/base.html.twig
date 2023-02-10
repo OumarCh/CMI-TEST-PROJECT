@@ -15,7 +15,15 @@
     </head>
     <body>
         <div class="container mx-auto">
-            <a href="{{ path('app_home')}}" class="text-2xl font-bold border-b-2 m-4 text-[#e1b12c]">CMI TEST TECHNIQUE</a>
+            <div class="flex justify-between">
+                <a href="{{ path('app_home')}}" class="text-2xl font-bold border-b-2 m-4 text-[#e1b12c]">CMI TEST TECHNIQUE</a>
+
+                {% if app.user %}
+                    <a href="{{ path('app_logout')}}" class="text-xl font-bold border-b-2 m-4 text-[#ee5253]">Déconnexion</a>
+                {% else %}
+                    <a href="{{ path('connect_google')}}" class="text-xl font-bold border-b-2 m-4">Se connecter</a>
+                {% endif %}
+            </div>
 
             {% block body %}{% endblock %}
         </div>
