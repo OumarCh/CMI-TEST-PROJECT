@@ -23,9 +23,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
-     */
-    #[ORM\Column]
+    */
+    #[ORM\Column(nullable: true)]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255, type: 'string')]
+    private $googleId;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $avatar;
 
     public function getId(): ?int
     {
@@ -45,18 +51,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @see PasswordAuthenticatedUserInterface
+    */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+    */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
-     */
+    */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
+
     /**
      * @see UserInterface
-     */
+    */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -73,27 +104,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getGoogleId(): ?string
     {
-        return $this->password;
+        return $this->googleId;
     }
 
-    public function setPassword(string $password): self
+    public function setGoogleId(string $googleId): self
     {
-        $this->password = $password;
+        $this->googleId = $googleId;
 
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
+    public function getAvatar(): ?string
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
     }
 }
