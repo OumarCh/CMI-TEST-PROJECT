@@ -10,17 +10,17 @@
         <h1 id="article_title" class="text-center p-2 text-xlg font-bold">{{ post.title }}</h1>
         <h2 class="text-lg mb-4">Les commentaires reçus <span class="text-[#ee5253]">({{total}})</span> :</h2>
 
-        <div class='flex justify-between flex-wrap'> 
+        <div class='flex justify-between flex-wrap my-8'> 
             {% if total %}           
                 {% for comment in post.comments %}
                     <div
-                        class="relative m-1 w-full"
+                        class="relative py-4 w-full"
                     >
-                        <div class="bg-gray-100">
+                        <div class="bg-gray-100 mb-4">
                             <p class="p-4">{{ comment.content }}</p>
                         </div>
                         <span class="text-sm">Publié le {{ comment.createdAt|date("d/m/Y", "Europe/Paris") }}</span>
-                        <a href="{{ path('app_comment', {id: comment.id})}}" class="w-full mb-4 p-4 font-bold">Ajouter une réponse</a>
+                        <a href="{{ path('app_comment', {id: comment.id})}}" class="w-full border-2 p-2 font-bold">Ajouter une réponse</a>
                     </div>
 
                     {% if comment.answers|length %}

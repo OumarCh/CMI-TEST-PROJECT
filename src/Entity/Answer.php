@@ -22,7 +22,7 @@ class Answer
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'answers')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Comment $comment = null;
 
     public function __construct()

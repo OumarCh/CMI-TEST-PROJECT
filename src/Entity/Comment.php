@@ -24,6 +24,7 @@ class Comment
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')] 
     private ?Post $post = null;
 
     #[ORM\OneToMany(mappedBy: 'comment', targetEntity: Answer::class)]

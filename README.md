@@ -20,3 +20,160 @@ Il s'agit dun projet de création d'un service web de discussion et de commentai
 Pour jouer les tests, il faut lancer la commande : php bin/phpunit
 
 
+## API Reference
+
+Prérequis :
+
+| `jwt token` | `string` | **Required**. la clé api |
+
+#### Get api jwt token
+
+```http
+  POST /api/login_check
+```
+
+| `username` | `string` | **Required**. email |
+| `password` | `string` | **Required**. la mot de passe |
+
+#### Get all posts
+
+```http
+  GET /api/posts
+```
+
+#### Get post
+
+```http
+  GET /api/posts/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de l'article     |
+
+#### Create post
+
+```http
+  POST /api/posts
+```
+
+#### Update post
+
+```http
+  PUT /api/posts/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de l'article     |
+
+#### Delete post
+
+```http
+  DELETE  /api/posts/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de l'article     |
+
+
+#### Get all comments
+
+```http
+  GET /api/comments
+```
+
+#### Get comment
+
+```http
+  GET /api/comments/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id du commentaire   |
+
+#### Create comment
+
+```http
+  POST /api/comments/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de l'article     |
+
+#### Update comment
+
+```http
+  PUT /api/comments/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id du commentaire   |
+
+#### Delete comment
+
+```http
+  DELETE  /api/comments/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id du commentaire   |
+
+
+#### Get all answers
+
+```http
+  GET /api/answers
+```
+
+#### Get answer
+
+```http
+  GET /api/answers/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+#### Create answer
+
+```http
+  POST /api/answers/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id du commentaire   |
+
+#### Update answer
+
+```http
+  PUT /api/answers/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+#### Delete answer
+
+```http
+  DELETE  /api/answers/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+
+
+
+
+
+

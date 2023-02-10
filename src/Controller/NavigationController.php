@@ -29,7 +29,7 @@ class NavigationController extends AbstractController
     {
         $lastComments = $commentRepository->lastComments(); 
         $posts = $paginator->paginate(
-            $postRepository->findAll(), // Requête contenant les données à paginer (ici nos articles)
+            $postRepository->AllPosts(), // Requête contenant les données à paginer (ici nos articles)
             $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
             20
         );
@@ -43,7 +43,6 @@ class NavigationController extends AbstractController
 
     /** 
      * Show post and publish comment on post
-     * @param string $id
      * @param Request $request
      * @param Post $post
     */
@@ -52,7 +51,7 @@ class NavigationController extends AbstractController
     {
         $newComment = new Comment();
         $formComment = $this->createForm(CommentType::class, $newComment, array(
-            'action' => $this->generateUrl('app_post', array('id' => $id)),
+            'action' => $this->generateUrl('app_post', array('id' => $post->getId())),
             'method' => 'POST',
         ));
 
@@ -72,16 +71,15 @@ class NavigationController extends AbstractController
     }
 
      /** 
-     * @param string $id
      * @param Request $request
      * @param Comment $comment
     */
     #[Route('comment/{id}', name: 'comment', methods: ['GET', 'POST', 'HEAD'])]
-    public function showComment(string $id, Request $request, Comment $comment, CommentAnswerManager $cam)
+    public function showComment(Request $request, Comment $comment, CommentAnswerManager $cam)
     {
         $newAnswer = new Answer();
         $formAnswer = $this->createForm(AnswerType::class, $newAnswer, array(
-            'action' => $this->generateUrl('app_comment', array('id' => $id)),
+            'action' => $this->generateUrl('app_comment', array('id' => $comment->getId())),
             'method' => 'POST',
         ));
 

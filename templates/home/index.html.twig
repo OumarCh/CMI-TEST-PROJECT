@@ -4,11 +4,7 @@
 
 {% block body %}
     <div class="w-full px-2 py-16 sm:px-0">
-        <h1 id="first_block_title" class="text-center p-2 text-lg font-bold">Les derniers commentaires</h1>
-
-        {% include 'home/last_comments.html.twig' with {'comments': last_comments} %}
-
-        <h2 id="second_block_title" class="text-center p-2 text-lg font-bold">Trouvez des articles intéressants</h2>
+        <h2 id="first_block_title" class="text-center p-2 text-lg font-bold">Trouvez des articles intéressants</h2>
 
         <section class='flex justify-between flex-wrap'>
             {% for post in posts %}
@@ -25,7 +21,11 @@
                 </a>
             {% endfor %}
         </section>
-            
+        
         {% include 'includes/my_pagination.html.twig' with {'posts': posts} %}
+
+        <h1 id="second_block_title" class="text-center p-2 my-8 text-lg font-bold">Les derniers commentaires</h1>
+
+        {% include 'home/last_comments.html.twig' with {'comments': last_comments} %}
     </div>
 {% endblock %}

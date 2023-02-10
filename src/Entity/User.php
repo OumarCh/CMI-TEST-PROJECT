@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,7 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     /**
@@ -27,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, type: 'string')]
+    #[ORM\Column(nullable: true)]
     private $googleId;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -109,7 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->googleId;
     }
 
-    public function setGoogleId(string $googleId): self
+    public function setGoogleId(?string $googleId): self
     {
         $this->googleId = $googleId;
 
