@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Service\CommentAnswerManager;
 
-#[Route('/api', name: 'api_')]
+#[Route('')]
 class UserController extends AbstractController {
     public function __construct(ManagerRegistry $em) {
         $this->em = $em;
@@ -22,7 +22,7 @@ class UserController extends AbstractController {
      * 
      * @param UserRepository $userRepository
      */
-    #[Route('/users', name: 'get_users', methods: ['GET'])]
+    #[Route('/api/users', name: 'api_users', methods: ['GET'])]
     public function getUsers(UserRepository $userRepository)
     {
         $users = $userRepository->findAll();
@@ -35,7 +35,7 @@ class UserController extends AbstractController {
      * 
      * @param User $user
      */
-    #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
+    #[Route('/api/users/{id}', name: 'api_get_user', methods: ['GET'])]
     public function getOneUser(User $user)
     {
         if (!$user) {
@@ -65,12 +65,22 @@ class UserController extends AbstractController {
             return $this->json('Password value can\'t be null', 400);
         }
 
+        if (is_null($request->request->get('first_name'))) {
+            return $this->json('Firstname value can\'t be null', 400);
+        }
+
+        if (is_null($request->request->get('last_name'))) {
+            return $this->json('Lastname value can\'t be null', 400);
+        }
+
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
             $request->request->get('password')
         );
 
         $user->SetEmail($request->request->get('email'));
+        $user->SetFirstName($request->request->get('first_name'));
+        $user->SetLastName($request->request->get('last_name'));
         $user->setRoles(['ROLE_USER']);
         $user->SetPassword($hashedPassword);
 
@@ -88,7 +98,7 @@ class UserController extends AbstractController {
      * @param User $user
      * @param CommentAnswerManager $cam
     */
-    #[Route('/users/{id}', name: 'edit_user', methods: ['PUT'])]
+    #[Route('/api/users/{id}', name: 'edit_user', methods: ['PUT'])]
     public function editUser(Request $request, UserPasswordHasherInterface $passwordHasher, User $user, CommentAnswerManager $cam)
     {
         if (!$user) {
@@ -118,7 +128,7 @@ class UserController extends AbstractController {
      * @param User $user
      * @param CommentAnswerManager $cam
     */
-    #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
+    #[Route('/api/users/{id}', name: 'delete_user', methods: ['DELETE'])]
     public function deleteUser(User $user, CommentAnswerManager $cam)
     {
         if (!$user) {

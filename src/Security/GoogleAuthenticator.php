@@ -17,11 +17,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GoogleAuthenticator extends OAuth2Authenticator
 {
-    public function __construct(private ClientRegistry $clientRegistry, private EntityManagerInterface $entityManager, private RouterInterface $router)
-    {}
+    public function __construct(
+        private ClientRegistry $clientRegistry, 
+        private EntityManagerInterface $entityManager, 
+        private RouterInterface $router,
+    ) {}
 
     public function supports(Request $request): ?bool
     {
@@ -42,20 +46,23 @@ class GoogleAuthenticator extends OAuth2Authenticator
                 $email = $googleUser->getEmail();
 
                 // Check if user exist
-                $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['googleId' => $googleUser->getId()]);
+                $user = $this->entityManager->getRepository(User::class)->findOneBy(['googleId' => $googleUser->getId()]);
 
                 //User doesnt exist, we create it !
-                if (!$existingUser) {
-                    $existingUser = new User();
-                    $existingUser->setEmail($email);
-                    $existingUser->setGoogleId($googleUser->getId());
-                    $existingUser->setRoles(['ROLE_USER']);
-                    $this->entityManager->persist($existingUser);
+                if (!$user) {
+                    $user = new User();
+                    $user->setEmail($email);
+                    $user->setGoogleId($googleUser->getId());
+                    $user->setFirstName($googleUser->getFirstName());
+                    $user->setLastName($googleUser->getLastName());
+                    $user->setRoles(['ROLE_USER']);
+
+                    $this->entityManager->persist($user);
                 }
-                $existingUser->setAvatar($googleUser->getAvatar());
+                $user->setAvatar($googleUser->getAvatar());
                 $this->entityManager->flush();
 
-                return $existingUser;
+                return $user;
             })
         );
     }
@@ -73,15 +80,4 @@ class GoogleAuthenticator extends OAuth2Authenticator
 
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
-
-//    public function start(Request $request, AuthenticationException $authException = null): Response
-//    {
-//        /*
-//         * If you would like this class to control what happens when an anonymous user accesses a
-//         * protected page (e.g. redirect to /login), uncomment this method and make this class
-//         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface.
-//         *
-//         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
-//         */
-//    }
 }

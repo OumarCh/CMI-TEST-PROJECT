@@ -7,7 +7,7 @@
     {% set total = post.comments|length %}
 
     <div class="w-full px-2 py-16 sm:px-0">
-        <h1 id="article_title" class="text-center p-2 text-xlg font-bold">{{ post.title }}</h1>
+        <h1 id="article_title" class="text-center p-2 text-xlg font-bold">Titre de l'article : {{ post.title }}</h1>
         <h2 class="text-lg mb-4">Les commentaires reçus <span class="text-[#ee5253]">({{total}})</span> :</h2>
 
         <div class='flex justify-between flex-wrap my-8'> 
@@ -16,6 +16,7 @@
                     <div
                         class="relative py-4 w-full"
                     >
+                        <p>{{comment.user.firstName ~ ' ' ~ comment.user.lastName}}</p>
                         <div class="bg-gray-100 mb-4">
                             <p class="p-4">{{ comment.content }}</p>
                         </div>

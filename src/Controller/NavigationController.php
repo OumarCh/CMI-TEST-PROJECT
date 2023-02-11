@@ -59,7 +59,7 @@ class NavigationController extends AbstractController
         if ($formComment->isSubmitted() && $formComment->isValid()) {
             $comment = $formComment->getData();
 
-            $cam->addComment($comment, $post);
+            $cam->addComment($comment, $post, $this->getUser());
 
             return $this->redirectToRoute('app_post', ['id' => $post->getId()]);
         }
@@ -87,7 +87,7 @@ class NavigationController extends AbstractController
         if ($formAnswer->isSubmitted() && $formAnswer->isValid()) {
             $answer = $formAnswer->getData();
 
-            $cam->addAnswer($answer, $comment);
+            $cam->addAnswer($answer, $comment, $this->getUser());
 
             return $this->redirectToRoute('app_post', ['id' => $comment->getPost()->getId()]);
         }

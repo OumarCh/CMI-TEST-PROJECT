@@ -1,15 +1,24 @@
 App\Entity\Post:
     post{1..50}:
-        title: 'Article : <name()>'
-        content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry''s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+        title: <sentence()>
+        content: <sentence()>
 
+App\Entity\User:
+    user{1..2}:
+        email: <email()>
+        roles: ['ROLE_USER']
+        first_name: <firstname()>
+        last_name: <lastname()>
+        avatar: https://ui-avatars.com/api/?name=$first_name+$last_name
 
 App\Entity\Comment:
     comment{1..50}:
-        content: <name()>
+        content: <sentence()>
         post: '@post*'
+        user: '@user*'
 
 App\Entity\Answer:
     answer{1..50}:
-        content: <name()>
+        content: <sentence()>
         comment: '@comment*'
+        user: '@user*'
