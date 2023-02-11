@@ -16,21 +16,30 @@ class CommentAnswerManager
     {
         $comment->setPost($post);
 
-        $this->em->getManager()->persist($comment);
-        $this->em->getManager()->flush(); 
+        $this->persist($comment);
     }
 
     public function addAnswer(Answer $answer, Comment $comment)
     {
         $answer->setComment($comment);
 
-        $this->em->getManager()->persist($answer);
+        $this->persist($answer);
+    }
+
+    public function persist($entity)
+    {
+        $this->em->getManager()->persist($entity);
         $this->em->getManager()->flush();
     }
 
     public function remove($entity)
     {
         $this->em->getManager()->remove($entity);
+        $this->em->getManager()->flush();
+    }
+
+    public function update()
+    {
         $this->em->getManager()->flush();
     }
 }

@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Service\CommentAnswerManager;
 
 #[Route('/api', name: 'api_')]
 class UserController extends AbstractController {
@@ -48,9 +49,11 @@ class UserController extends AbstractController {
      * Create User
      * @param UserPasswordHasherInterface $passwordHasher
      * @param Request $request
+     * @param use CommentAnswerManager $cam
+
     */
     #[Route('/users', name: 'add_user', methods: ['POST'])]
-    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher)
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, CommentAnswerManager $cam)
     {
         $user = new User();
 
@@ -71,8 +74,7 @@ class UserController extends AbstractController {
         $user->setRoles(['ROLE_USER']);
         $user->SetPassword($hashedPassword);
 
-        $this->em->getManager()->persist($user);
-        $this->em->getManager()->flush();
+        $cam->persist($user);
 
         return $this->json('User created successfully', 201);
 
@@ -84,9 +86,10 @@ class UserController extends AbstractController {
      * @param Request $request
      * @param UserPasswordHasherInterface $passwordHasher
      * @param User $user
+     * @param CommentAnswerManager $cam
     */
     #[Route('/users/{id}', name: 'edit_user', methods: ['PUT'])]
-    public function editUser(Request $request, UserPasswordHasherInterface $passwordHasher, User $user)
+    public function editUser(Request $request, UserPasswordHasherInterface $passwordHasher, User $user, CommentAnswerManager $cam)
     {
         if (!$user) {
             return $this->json('No User found', 404);
@@ -104,7 +107,7 @@ class UserController extends AbstractController {
             $user->SetPassword($hashedPassword);
         }
 
-        $this->em->getManager()->flush();
+        $cam->update();
 
         return $this->json('Updated user successfully', 200);
     }    
@@ -113,16 +116,16 @@ class UserController extends AbstractController {
      * Delete user
      * 
      * @param User $user
+     * @param CommentAnswerManager $cam
     */
     #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function deleteUser(User $user)
+    public function deleteUser(User $user, CommentAnswerManager $cam)
     {
         if (!$user) {
             return $this->json('No user found', 404);
         }
 
-        $this->em->getManager()->remove($user);
-        $this->em->getManager()->flush();
+        $cam->remove($user);
 
         return $this->json('Deleted user successfully ', 200);
     }    

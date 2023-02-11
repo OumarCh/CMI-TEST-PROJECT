@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Service\CommentAnswerManager;
 
 #[Route('/api', name: 'api_')]
 class PostController extends AbstractController {
@@ -78,9 +79,10 @@ class PostController extends AbstractController {
      * Create post
      * 
      * @param Request $request
+     * @param CommentAnswerManager $cam
     */
     #[Route('/posts', name: 'add_post', methods: ['POST'])]
-    public function createPost(Request $request)
+    public function createPost(Request $request, CommentAnswerManager $cam)
     {
         $post = new Post();
 
@@ -95,11 +97,9 @@ class PostController extends AbstractController {
         $post->SetTitle($request->request->get('title'));
         $post->SetContent($request->request->get('content'));
 
-        $this->em->getManager()->persist($post);
-        $this->em->getManager()->flush();
+        $cam->persist($post);
 
         return $this->json('Post created successfully with', 201);
-
     }
 
     /** 
@@ -107,9 +107,10 @@ class PostController extends AbstractController {
      * 
      * @param Request $request
      * @param Post $post
+     * @param CommentAnswerManager $cam
     */
     #[Route('/posts/{id}', name: 'edit_post', methods: ['PUT'])]
-    public function editPost(Request $request, Post $post)
+    public function editPost(Request $request, Post $post, CommentAnswerManager $cam)
     {
         if (!$post) {
             return $this->json('No post found for id' . $post->getId(), 404);
@@ -123,7 +124,7 @@ class PostController extends AbstractController {
             $post->SetContent($request->request->get('content'));
         }
 
-        $this->em->getManager()->flush();
+        $cam->update();
 
         return $this->json('Updated post successfully', 200);
     }    
@@ -132,16 +133,16 @@ class PostController extends AbstractController {
      * Delete post 
      * 
      * @param Post $post
+     * @param CommentAnswerManager $cam
     */
     #[Route('/posts/{id}', name: 'delete_post', methods: ['DELETE'])]
-    public function deletePost(Post $post)
+    public function deletePost(Post $post, CommentAnswerManager $cam)
     {
         if (!$post) {
             return $this->json('No post found', 404);
         }
 
-        $this->em->getManager()->remove($post);
-        $this->em->getManager()->flush();
+        $cam->remove($post);
 
         return $this->json('Deleted post successfully', 200);
     }    
