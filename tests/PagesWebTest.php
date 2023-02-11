@@ -4,7 +4,7 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PagesTest extends WebTestCase
+class PagesWebTest extends WebTestCase
 {
     public function testHomePage(): void
     {
@@ -25,6 +25,6 @@ class PagesTest extends WebTestCase
             
         $this->assertResponseIsSuccessful();
         $this->assertPageTitleContains('CMI Test');
-        $this->assertSelectorTextContains('#article_title', 'Article : ');
+        $this->assertSelectorTextContains('#article_title', 'Titre de l\'article :');
     }
 }
