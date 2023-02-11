@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Service\CommentAnswerManager;
 
 #[Route('/api', name: 'api_')]
 class CommentController extends AbstractController {
@@ -84,9 +85,10 @@ class CommentController extends AbstractController {
      * 
      * @param Request $request
      * @param PostRepository $postRepository
+     * @param CommentAnswerManager $cam
     */
     #[Route('/comments', name: 'add_comment', methods: ['POST'])]
-    public function createComment(Request $request, PostRepository $postRepository)
+    public function createComment(Request $request, PostRepository $postRepository, CommentAnswerManager $cam)
     {
         $comment = new Comment();
         $post = $postRepository->find((int)$request->request->get('post_id'));
@@ -102,11 +104,9 @@ class CommentController extends AbstractController {
         $comment->SetContent($request->request->get('content'));
         $comment->SetPost($post);
 
-        $this->em->getManager()->persist($comment);
-        $this->em->getManager()->flush();
+        $cam->persist($comment);
 
         return $this->json('Comment created successfully', 201);
-
     }
 
     /** 
@@ -114,9 +114,10 @@ class CommentController extends AbstractController {
      * 
      * @param Request $request
      * @param Comment $comment
+     * @param CommentAnswerManager $cam
     */
     #[Route('/comments/{id}', name: 'edit_comment', methods: ['PUT'])]
-    public function editComment(Request $request, Comment $comment)
+    public function editComment(Request $request, Comment $comment, CommentAnswerManager $cam)
     {
         if (!$comment) {
             return $this->json('No comment found for id' . $comment->getId(), 404);
@@ -126,7 +127,7 @@ class CommentController extends AbstractController {
             $comment->SetContent($request->request->get('content'));
         }
 
-        $this->em->getManager()->flush();
+        $cam->update();
 
         return $this->json('Updated comment successfully', 200);
     }    
@@ -135,16 +136,16 @@ class CommentController extends AbstractController {
      * Delete comment
      * 
      * @param Comment $comment
+     * @param CommentAnswerManager $cam
     */
     #[Route('/comments/{id}', name: 'delete_comment', methods: ['DELETE'])]
-    public function deleteComment(Comment $comment)
+    public function deleteComment(Comment $comment, CommentAnswerManager $cam)
     {
         if (!$comment) {
             return $this->json('No comment found', 404);
         }
 
-        $this->em->getManager()->remove($comment);
-        $this->em->getManager()->flush();
+        $cam->remove($comment);
 
         return $this->json('Deleted comment successfully', 200);
     }    

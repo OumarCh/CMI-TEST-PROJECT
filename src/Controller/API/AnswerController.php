@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Service\CommentAnswerManager;
 
 #[Route('/api', name: 'api_')]
 class AnswerController extends AbstractController {
@@ -21,7 +22,8 @@ class AnswerController extends AbstractController {
     private $normalizers;
     private $em;
 
-    public function __construct(ManagerRegistry $em) {
+    public function __construct(ManagerRegistry $em) 
+    {
         $this->encoders = [new JsonEncoder()];
         $this->normalizers = [new ObjectNormalizer()];
         $this->em = $em;
@@ -54,9 +56,10 @@ class AnswerController extends AbstractController {
      * 
      * @param Request $request
      * @param CommentRepository $commentRepository
+     * @param CommentAnswerManager $cam
     */
     #[Route('/answers', name: 'add_answer', methods: ['POST'])]
-    public function createAnswer(Request $request, CommentRepository $commentRepository)
+    public function createAnswer(Request $request, CommentRepository $commentRepository, CommentAnswerManager $cam)
     {
         $answer = new Answer();
         $comment = $commentRepository->find((int)$request->request->get('comment_id'));
@@ -71,12 +74,9 @@ class AnswerController extends AbstractController {
 
         $answer->SetContent($request->request->get('content'));
         $answer->SetComment($comment);
-
-        $this->em->getManager()->persist($answer);
-        $this->em->getManager()->flush();
+        $cam->persist($answer);
 
         return $this->json('Answer created successfully', 201);
-
     }
 
     /**
@@ -111,9 +111,10 @@ class AnswerController extends AbstractController {
      * 
      * @param Request $request
      * @param Answer $answer
+     * @param CommentAnswerManager $cam
     */
     #[Route('/answers/{id}', name: 'edit_answer', methods: ['PUT'])]
-    public function editAnswer(Request $request, Answer $answer)
+    public function editAnswer(Request $request, Answer $answer, CommentAnswerManager $cam)
     {
         if (!$answer) {
             return $this->json('No answer found for id' . $answer->getId(), 404);
@@ -121,7 +122,7 @@ class AnswerController extends AbstractController {
 
         $answer->SetContent($request->request->get('content'));
 
-        $this->em->getManager()->flush();
+        $cam->update();
 
         return $this->json('Updated answer successfully with id ' . $answer->getId(), 200);
     }    
@@ -130,16 +131,16 @@ class AnswerController extends AbstractController {
      * Delete answer
      * 
      * @param Answer $answer
+     * @param CommentAnswerManager $cam
     */
     #[Route('/answers/{id}', name: 'delete_answer', methods: ['DELETE'])]
-    public function deleteAnswer(Answer $answer)
+    public function deleteAnswer(Answer $answer, CommentAnswerManager $cam)
     {
         if (!$answer) {
             return $this->json('No answer found for id' . $answer->getId(), 404);
         }
 
-        $this->em->getManager()->remove($answer);
-        $this->em->getManager()->flush();
+        $cam->remove($answer);
 
         return $this->json('Deleted answer successfully', 200);
     }    
