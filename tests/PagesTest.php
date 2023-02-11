@@ -14,8 +14,8 @@ class PagesTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertPageTitleContains('CMI Test');
         $this->assertSelectorExists('h1');
-        $this->assertSelectorTextContains('#first_block_title', 'Les derniers commentaires');
-        $this->assertSelectorTextContains('#second_block_title', 'Trouvez des articles intéressants');
+        $this->assertSelectorTextContains('#second_block_title', 'Les derniers commentaires');
+        $this->assertSelectorTextContains('#first_block_title', 'Trouvez des articles intéressants');
     }
 
     public function testCommentPage(): void

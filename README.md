@@ -171,6 +171,49 @@ Prérequis :
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. Id de la réponse    |
 
+#### Get all users
+
+```http
+  GET /api/users
+```
+
+#### Get user
+
+```http
+  GET /api/users/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+#### Create user
+
+```http
+  POST /users
+```
+
+#### Update user
+
+```http
+  PUT /api/users/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+#### Delete user
+
+```http
+  DELETE  /api/users/${id}
+```
+
+| Paramètre | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id de la réponse    |
+
+
 
 
 

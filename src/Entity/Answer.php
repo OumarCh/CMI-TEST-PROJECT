@@ -25,6 +25,10 @@ class Answer
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Comment $comment = null;
 
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    #[ORM\JoinColumn(nullable: false)] 
+    private ?User $user = null;
+
     public function __construct()
     {
         $now = new DateTime('now');
@@ -57,6 +61,18 @@ class Answer
     public function setComment(?Comment $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
