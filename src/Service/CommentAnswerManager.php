@@ -18,7 +18,7 @@ class CommentAnswerManager
 
         $this->em->getManager()->persist($comment);
         $this->em->getManager()->flush(); 
-            }
+    }
 
     public function addAnswer(Answer $answer, Comment $comment)
     {
@@ -26,6 +26,11 @@ class CommentAnswerManager
 
         $this->em->getManager()->persist($answer);
         $this->em->getManager()->flush();
+    }
 
+    public function remove($entity)
+    {
+        $this->em->getManager()->remove($entity);
+        $this->em->getManager()->flush();
     }
 }
