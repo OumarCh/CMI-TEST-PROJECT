@@ -15,8 +15,10 @@
             <h3 class="w-full text-xl py-4">Notez ce commentaire sur 5</h3>
             {# form for publish note #}
             {{ form_start(form_note) }}
-                <div class="w-full border-2 border-[#fbc531] p-4">
+                <div class="flex border-2 border-[#fbc531] p-4">
+                    <span>1</span>
                     {{ form_widget(form_note.note, {'attr': {'class': 'w-full'}}) }}
+                    <span>5</span> 
                 </div>
                 <div class="text-sm w-full">{% if app.user == null %}Vous devez être connecter pour donner une note{% endif %}</div>
                 {{ form_widget(form_note.noter) }}
