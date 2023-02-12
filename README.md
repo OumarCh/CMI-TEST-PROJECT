@@ -22,6 +22,8 @@ Pour jouer les tests, il faut lancer la commande : php bin/phpunit
 
 ## API Reference
 
+Deux utilisateurs de tests pour l'API sont créés dans les fixtures.
+
 Prérequis :
 
 | `jwt token` | `string` | **Required**. la clé api |
@@ -31,6 +33,7 @@ Prérequis :
 ```http
   POST /api/login_check
 ```
+Données attendues
 
 | `username` | `string` | **Required**. email |
 | `password` | `string` | **Required**. mot de passe |

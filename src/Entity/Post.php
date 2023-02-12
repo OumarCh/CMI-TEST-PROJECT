@@ -30,10 +30,6 @@ class Post
     #[Assert\NotBlank(message: "Veuillez entrer le contenu de l'article.")]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Veuillez donner une image à l'article.")]
-    private ?string $image = null;
-
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private Collection $comments;
 
@@ -62,18 +58,6 @@ class Post
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }

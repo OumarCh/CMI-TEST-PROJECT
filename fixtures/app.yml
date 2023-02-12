@@ -2,7 +2,6 @@ App\Entity\Post:
     post{1..50}:
         title: <sentence()>
         content: <sentence()>
-        image: 'https://via.placeholder.com/300'
 
 App\Entity\User:
     user{1..2}:
@@ -10,6 +9,7 @@ App\Entity\User:
         roles: ['ROLE_USER']
         first_name: <firstname()>
         last_name: <lastname()>
+        password: <hashPassword('Password')>
         avatar: https://ui-avatars.com/api/?name=$first_name+$last_name
 
 App\Entity\Comment:

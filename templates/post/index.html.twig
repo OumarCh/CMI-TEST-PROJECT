@@ -4,7 +4,7 @@
 
 {% block body %}
     {% for notice in app.flashes('notice') %}
-        <div class="bg-[#10ac84] p-4 w-full">
+        <div class="bg-[#10ac84] p-4 w-full m-4">
             <p>{{ notice }}</p>
         </div>
     {% endfor %}
