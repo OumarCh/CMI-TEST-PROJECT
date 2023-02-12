@@ -24,8 +24,10 @@ services:
         autowire: true
 
     App\Twig\AppExtension:
-        tags:
-            - { name: twig.extension }
+        tags: [{ name: twig.extension }]
+
+    App\Providers\HashPasswordProvider:
+        tags: [ { name: nelmio_alice.faker.provider } ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

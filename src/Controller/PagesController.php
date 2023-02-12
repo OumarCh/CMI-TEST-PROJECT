@@ -55,7 +55,7 @@ class PagesController extends AbstractController
         $newComment = new Comment();
         $formComment = $this->createForm(CommentType::class, $newComment, array(
             'action' => $this->generateUrl('app_post', array('id' => $post->getId())),
-            'method' => 'POST',
+            'method' => 'POST'
         ));
 
         $formComment->handleRequest($request);
