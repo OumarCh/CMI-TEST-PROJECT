@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Traits\TimestampableEntity;
 use \DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -21,10 +22,17 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Veuillez entrer le titre de l'article.")]
+    #[Assert\Lenght(max: 255, maxMessage: "Le titre de l'article ne doit pas dépasser 255 charactères.")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Veuillez entrer le contenu de l'article.")]
     private ?string $content = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Veuillez donner une image à l'article.")]
+    private ?string $image = null;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private Collection $comments;
@@ -54,6 +62,18 @@ class Post
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

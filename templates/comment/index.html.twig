@@ -13,7 +13,7 @@
         <div class="flex flex-wrap mt-8">
             <h3 class="w-full text-xl py-4">Laisser une réponse</h3>
             {# form for publish commentaire #}
-            {{ form_start(form_answer) }}
+            {{ form_start(form_answer, {'novalidate': 'novalidate'}) }}
                 <div class="w-full border-2">
                     {{ form_widget(form_answer.content, {'attr': {'class': 'w-full'}}) }}
                 </div>

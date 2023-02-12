@@ -12,11 +12,13 @@ use App\Repository\CommentRepository;
 use App\Entity\Post;
 use App\Entity\Comment;
 use App\Entity\Answer;
+use App\Entity\Note;
 use App\Form\CommentType;
 use App\Form\AnswerType;
+use App\Form\NoteType;
 
 #[Route('/', name: 'app_')]
-class NavigationController extends AbstractController
+class PagesController extends AbstractController
 {
     /**
      * @param Request $request
@@ -24,7 +26,7 @@ class NavigationController extends AbstractController
      * @param PostRepository $postRepository
      * @param CommentRepository $postRepository
      */
-    #[Route('', name: 'home', methods: ['GET', 'HEAD'])]
+    #[Route('', name: 'home', methods: ['GET'])]
     public function index(Request $request, PaginatorInterface $paginator, PostRepository $postRepository, CommentRepository $commentRepository)
     {
         $lastComments = $commentRepository->lastComments(); 
@@ -42,11 +44,12 @@ class NavigationController extends AbstractController
     }
 
     /** 
-     * Show post and publish comment on post
+     * Show and publish comment on post
+     * 
      * @param Request $request
      * @param Post $post
     */
-    #[Route('post/{id}', name: 'post', methods: ['GET', 'POST', 'HEAD'])]
+    #[Route('post/{id}', name: 'post', methods: ['GET', 'POST'])]
     public function showPost(string $id, Request $request, Post $post, CommentAnswerManager $cam)
     {
         $newComment = new Comment();
@@ -60,6 +63,7 @@ class NavigationController extends AbstractController
             $comment = $formComment->getData();
 
             $cam->addComment($comment, $post, $this->getUser());
+            $this->addFlash('notice', 'Merci ! Votre commentaire a été ajouté.');
 
             return $this->redirectToRoute('app_post', ['id' => $post->getId()]);
         }
@@ -70,11 +74,13 @@ class NavigationController extends AbstractController
         ]);
     }
 
-     /** 
+    /** 
+     *  Show and publish answer on comment
+     * 
      * @param Request $request
      * @param Comment $comment
     */
-    #[Route('comment/{id}', name: 'comment', methods: ['GET', 'POST', 'HEAD'])]
+    #[Route('comment/{id}', name: 'comment', methods: ['GET', 'POST'])]
     public function showComment(Request $request, Comment $comment, CommentAnswerManager $cam)
     {
         $newAnswer = new Answer();
@@ -88,6 +94,7 @@ class NavigationController extends AbstractController
             $answer = $formAnswer->getData();
 
             $cam->addAnswer($answer, $comment, $this->getUser());
+            $this->addFlash('notice', 'Merci ! Votre réponse a été ajoutée.');
 
             return $this->redirectToRoute('app_post', ['id' => $comment->getPost()->getId()]);
         }
@@ -95,6 +102,39 @@ class NavigationController extends AbstractController
         return $this->render('comment/index.html.twig', [
             'comment' => $comment,
             'form_answer' => $formAnswer->createView()
+        ]);
+    }
+
+    /** 
+     * Show and publish note on comment
+     * 
+     * @param Request $request
+     * @param Comment $comment
+    */
+    #[Route('note/comment/{id}', name: 'note', methods: ['GET', 'POST'])]
+    public function actionNote(Request $request, Comment $comment, CommentAnswerManager $cam)
+    {
+        $note = new Note();
+        $formNote = $this->createForm(NoteType::class, $note, array(
+            'action' => $this->generateUrl('app_note', array('id' => $comment->getId())),
+            'method' => 'POST',
+        ));
+
+        $formNote->handleRequest($request);
+        if ($formNote->isSubmitted() && $formNote->isValid()) {
+            $note = $formNote->getData();
+            $note->setUser($this->getUser());
+            $note->setComment($comment);
+
+            $cam->persist($note);
+            $this->addFlash('notice', 'Merci ! Votre note a été bien prise en compte.');
+
+            return $this->redirectToRoute('app_post', ['id' => $comment->getPost()->getId()]);
+        }
+
+        return $this->render('note/index.html.twig', [
+            'comment' => $comment,
+            'form_note' => $formNote->createView()
         ]);
     }
 
