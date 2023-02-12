@@ -2,6 +2,7 @@ App\Entity\Post:
     post{1..50}:
         title: <sentence()>
         content: <sentence()>
+        image: 'https://via.placeholder.com/300'
 
 App\Entity\User:
     user{1..2}:

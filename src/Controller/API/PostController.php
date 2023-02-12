@@ -99,7 +99,7 @@ class PostController extends AbstractController {
 
         $cam->persist($post);
 
-        return $this->json('Post created successfully with', 201);
+        return $this->json('Post created successfully', 201);
     }
 
     /** 
@@ -113,7 +113,7 @@ class PostController extends AbstractController {
     public function editPost(Request $request, Post $post, CommentAnswerManager $cam)
     {
         if (!$post) {
-            return $this->json('No post found for id' . $post->getId(), 404);
+            return $this->json('No post found', 404);
         }
 
         if (!is_null($request->request->get('title'))) {

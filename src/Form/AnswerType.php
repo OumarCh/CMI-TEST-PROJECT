@@ -31,7 +31,7 @@ class AnswerType extends AbstractType
                     'disabled' => $user ? false : true,
                     'title' => $user ? "Publier ma réponse" : "Connectez-vous pour publier"
                 ],
-            ]);
+            ])
         ;
     }
 

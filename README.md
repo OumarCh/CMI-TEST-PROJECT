@@ -33,7 +33,7 @@ Prérequis :
 ```
 
 | `username` | `string` | **Required**. email |
-| `password` | `string` | **Required**. la mot de passe |
+| `password` | `string` | **Required**. mot de passe |
 
 #### Get all posts
 
@@ -97,12 +97,8 @@ Prérequis :
 #### Create comment
 
 ```http
-  POST /api/comments/${id}
+  POST /api/comments
 ```
-
-| Paramètre | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id de l'article     |
 
 #### Update comment
 
@@ -144,12 +140,8 @@ Prérequis :
 #### Create answer
 
 ```http
-  POST /api/answers/${id}
+  POST /api/answers
 ```
-
-| Paramètre | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id du commentaire   |
 
 #### Update answer
 
@@ -170,53 +162,3 @@ Prérequis :
 | Paramètre | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. Id de la réponse    |
-
-#### Get all users
-
-```http
-  GET /api/users
-```
-
-#### Get user
-
-```http
-  GET /api/users/${id}
-```
-
-| Paramètre | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id de la réponse    |
-
-#### Create user
-
-```http
-  POST /users
-```
-
-#### Update user
-
-```http
-  PUT /api/users/${id}
-```
-
-| Paramètre | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id de la réponse    |
-
-#### Delete user
-
-```http
-  DELETE  /api/users/${id}
-```
-
-| Paramètre | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id de la réponse    |
-
-
-
-
-
-
-
-

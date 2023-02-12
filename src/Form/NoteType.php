@@ -2,17 +2,16 @@
 
 namespace App\Form;
 
-use App\Entity\Comment;
+use App\Entity\Note;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Security\Core\Security;
 
-class CommentType extends AbstractType
+class NoteType extends AbstractType
 {
-
     public function __construct(private Security $security)
     {}
 
@@ -21,16 +20,17 @@ class CommentType extends AbstractType
         $user = $this->security->getUser();
 
         $builder
-            ->add('content', TextareaType::class, [
+            ->add('note', RangeType::class, [
                 'attr' => [
-                    'label' => "Votre commentaire"
-                ]
+                    'min' => 1,
+                    'max' => 5
+                ],
             ])
-            ->add('publier', SubmitType::class, [
+            ->add('noter', SubmitType::class, [
                 'attr' => [
                     'class' => 'cursor-pointer p-4 bg-gray-100 rounded mt-4',
                     'disabled' => $user ? false : true,
-                    'title' => $user ? "Publier mon commentaire" : "Connectez-vous pour publier"
+                    'title' => $user ? "Publier ma note" : "Connectez-vous pour noter"
                 ],
             ])
         ;
@@ -39,10 +39,7 @@ class CommentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Comment::class,
-            'attr' => array(
-                'class' => 'w-full'
-            )
+            'data_class' => Note::class,
         ]);
     }
 }

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CMI Test{% endblock %}
+
+{% block body %}
+    <div class="w-full sm:px-0">
+        <h1 id="article_title" class="text-center p-2 text-xlg font-bold">Titre de l'article : {{ comment.post.title }}</h1>
+        <span class="text-[#fbc531] font-bold text-xl">Note : {{note(comment)}}</span>
+        <div class="w-full m-8 bg-gray-100 p-4">
+            <h2 class="text-lg mb-4">Le commentaire :</h2>
+            <p class=>{{comment.content}}</p>
+        </div>
+
+        <div class="flex flex-wrap mt-8">
+            <h3 class="w-full text-xl py-4">Notez ce commentaire sur 5</h3>
+            {# form for publish note #}
+            {{ form_start(form_note) }}
+                <div class="w-full border-2 border-[#fbc531] p-4">
+                    {{ form_widget(form_note.note, {'attr': {'class': 'w-full'}}) }}
+                </div>
+                <div class="text-sm w-full">{% if app.user == null %}Vous devez être connecter pour donner une note{% endif %}</div>
+                {{ form_widget(form_note.noter) }}
+            {{ form_end(form_note) }}
+        </div>
+    </div>
+{% endblock %}

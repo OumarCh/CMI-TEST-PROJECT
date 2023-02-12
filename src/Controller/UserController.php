@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\API;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,69 +10,26 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Service\CommentAnswerManager;
+use Symfony\Component\Exception\NotFoundHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-#[Route('')]
+#[Route('/', name: 'app_')]
 class UserController extends AbstractController {
     public function __construct(ManagerRegistry $em) {
         $this->em = $em;
     }
 
-    /**
-     * Return all users
-     * 
-     * @param UserRepository $userRepository
-     */
-    #[Route('/api/users', name: 'api_users', methods: ['GET'])]
-    public function getUsers(UserRepository $userRepository)
-    {
-        $users = $userRepository->findAll();
-
-        return $this->json($users, 200);
-    }
-
-    /**
-     * Return a user
-     * 
-     * @param User $user
-     */
-    #[Route('/api/users/{id}', name: 'api_get_user', methods: ['GET'])]
-    public function getOneUser(User $user)
-    {
-        if (!$user) {
-            return $this->json('No user found for id' . $user->getId(), 404);
-        }
-
-        return $this->json($user, 200);
-    }
-
     /** 
      * Create User
+     *  
      * @param UserPasswordHasherInterface $passwordHasher
      * @param Request $request
      * @param use CommentAnswerManager $cam
-
     */
-    #[Route('/users', name: 'add_user', methods: ['POST'])]
+    #[Route('users', name: 'add_user', methods: ['POST'])]
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, CommentAnswerManager $cam)
     {
         $user = new User();
-
-        if (is_null($request->request->get('email'))) {
-            return $this->json('email value can\'t be null', 400);
-        }
-
-        if (is_null($request->request->get('password'))) {
-            return $this->json('Password value can\'t be null', 400);
-        }
-
-        if (is_null($request->request->get('first_name'))) {
-            return $this->json('Firstname value can\'t be null', 400);
-        }
-
-        if (is_null($request->request->get('last_name'))) {
-            return $this->json('Lastname value can\'t be null', 400);
-        }
-
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
             $request->request->get('password')
@@ -86,23 +43,24 @@ class UserController extends AbstractController {
 
         $cam->persist($user);
 
-        return $this->json('User created successfully', 201);
-
+        return $this->redirectToRoute('app_home');
     }
 
     /** 
      * Edit a User
+     * 
+     * @IsGranted("ROLE_USER")
      * 
      * @param Request $request
      * @param UserPasswordHasherInterface $passwordHasher
      * @param User $user
      * @param CommentAnswerManager $cam
     */
-    #[Route('/api/users/{id}', name: 'edit_user', methods: ['PUT'])]
+    #[Route('users/{id}', name: 'edit_user', methods: ['PUT'])]
     public function editUser(Request $request, UserPasswordHasherInterface $passwordHasher, User $user, CommentAnswerManager $cam)
     {
         if (!$user) {
-            return $this->json('No User found', 404);
+            throw new NotFoundHttpException();
         }
 
         if (!is_null($request->request->get('email'))) {
@@ -119,25 +77,27 @@ class UserController extends AbstractController {
 
         $cam->update();
 
-        return $this->json('Updated user successfully', 200);
+        return $this->redirectToRoute('app_home');
     }    
 
     /** 
      * Delete user
      * 
+     * @IsGranted("ROLE_USER")
+     * 
      * @param User $user
      * @param CommentAnswerManager $cam
     */
-    #[Route('/api/users/{id}', name: 'delete_user', methods: ['DELETE'])]
+    #[Route('users/{id}', name: 'delete_user', methods: ['DELETE'])]
     public function deleteUser(User $user, CommentAnswerManager $cam)
     {
         if (!$user) {
-            return $this->json('No user found', 404);
+            throw new NotFoundHttpException();
         }
 
         $cam->remove($user);
 
-        return $this->json('Deleted user successfully ', 200);
+        return $this->redirectToRoute('app_home');
     }    
 }
 

@@ -2,15 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\AnswerRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Traits\TimestampableEntity;
 use \DateTime;
-use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: AnswerRepository::class)]
-class Answer
+#[ORM\Entity(repositoryClass: NoteRepository::class)]
+class Note
 {
     use TimestampableEntity;
 
@@ -19,17 +17,23 @@ class Answer
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(message: "Veuillez entrer votre réponse.")]
-    private ?string $content = null;
+    #[ORM\Column]
+    #[Assert\NotBlank(message: "Veuillez entrer votre note.")]
+    #[Assert\Range(
+        min: 1,
+        max: 5, 
+        notInRangeMessage: "La note doit être comprise entre {{min}} et {{max}}.",
+    )]
+    private ?int $note = null;
 
-    #[ORM\ManyToOne(inversedBy: 'answers')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Comment $comment = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)] 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
 
     public function __construct()
     {
@@ -38,19 +42,20 @@ class Answer
         $this->updatedAt = $now;
     }
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getContent(): ?string
+    public function getNote(): ?int
     {
-        return $this->content;
+        return $this->note;
     }
 
-    public function setContent(string $content): self
+    public function setNote(int $note): self
     {
-        $this->content = $content;
+        $this->note = $note;
 
         return $this;
     }

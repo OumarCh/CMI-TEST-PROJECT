@@ -3,6 +3,12 @@
 {% block title %}CMI Test{% endblock %}
 
 {% block body %}
+    {% for notice in app.flashes('notice') %}
+        <div class="bg-[#10ac84] p-4 w-full">
+            <p>{{ notice }}</p>
+        </div>
+    {% endfor %}
+
     {# Count comment for post #}
     {% set total = post.comments|length %}
 
@@ -21,7 +27,11 @@
                             <p class="p-4">{{ comment.content }}</p>
                         </div>
                         <span class="text-sm">Publié le {{ comment.createdAt|date("d/m/Y", "Europe/Paris") }}</span>
+                        <span Answerclass="text-[#fbc531] font-bold text-sm">Note : {{note(comment)}}</span>
                         <a href="{{ path('app_comment', {id: comment.id})}}" class="w-full border-2 p-2 font-bold">Ajouter une réponse</a>
+                        {% if app.user and app.user != comment.user %}
+                            <a href="{{ path('app_note', {id: comment.id})}}" class="w-full border-2 border-[#fbc531] p-2 bg-[#fbc531] font-bold">Noter</a>
+                        {% endif %}
                     </div>
 
                     {% if comment.answers|length %}

@@ -10,6 +10,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Common\Collections\Collection;
 use App\Traits\TimestampableEntity;
 use \DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -22,12 +23,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email(message: "L'email {{value}} n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Veuillez entrer votre prénom.")]
+    #[Assert\Lenght(
+        min: 2,
+        max: 180, 
+        minMessage: "Le prénom doit avoir au moins 2 charactères.",
+        maxMessage: "Le prénom ne doit pas dépasser 180 charactères."
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Veuillez entrer votre nom.")]
+    #[Assert\Lenght(
+        min: 2,
+        max: 180, 
+        minMessage: "Le nom doit avoir au moins 2 charactères.",
+        maxMessage: "Le nom ne doit pas dépasser 180 charactères."
+    )]
     private ?string $lastName = null;
 
     #[ORM\Column(type: 'json')]
@@ -44,12 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $avatar;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
-    private Collection $comments;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Answer::class)]
-    private Collection $answers;
 
     public function __construct()
     {
@@ -173,64 +183,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(string $avatar): self
     {
         $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Answer>
-     */
-    public function getAnswers(): Collection
-    {
-        return $this->answers;
-    }
-
-    public function addAnswer(Answer $answer): self
-    {
-        if (!$this->answers->contains($answer)) {
-            $this->answers->add($answer);
-            $comment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnswer(Answer $answer): self
-    {
-        if ($this->answers->removeElement($answer)) {
-            if ($answer->getUser() === $this) {
-                $answer->setUser(null);
-            }
-        }
 
         return $this;
     }
